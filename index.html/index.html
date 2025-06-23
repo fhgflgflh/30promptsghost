@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jornada do Despertar da IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+    canvas { display: block; margin: auto; background: #1a1a1a; border: 3px solid #0f0; }
+    #finalScreen {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding-top: 100px;
+      z-index: 10;
+    }
+    #finalScreen a {
+      background: #f00;
+      color: #fff;
+      padding: 15px 30px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="400" height="500"></canvas>
+<div id="finalScreen">
+  <p>🔥 VOCÊ DESBLOQUEOU O CHIP DOS PROMPTS SECRETOS! 🔥</p>
+  <p>Agora você pode acessar os 30 PROMPTS que transformam IA em dinheiro vivo!</p>
+  <a href="#">QUERO OS PROMPTS AGORA</a>
+</div>
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let player = { x: 20, y: 400, size: 30, color: "#0f0", speed: 5 };
+let bonus = { x: 330, y: 30, size: 30, color: "#ff0" };
+let keys = {};
+
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+function drawRect(obj) {
+  ctx.fillStyle = obj.color;
+  ctx.fillRect(obj.x, obj.y, obj.size, obj.size);
+}
+
+function update() {
+  if (keys["ArrowUp"]) player.y -= player.speed;
+  if (keys["ArrowDown"]) player.y += player.speed;
+  if (keys["ArrowLeft"]) player.x -= player.speed;
+  if (keys["ArrowRight"]) player.x += player.speed;
+
+  player.x = Math.max(0, Math.min(canvas.width - player.size, player.x));
+  player.y = Math.max(0, Math.min(canvas.height - player.size, player.y));
+
+  if (player.x < bonus.x + bonus.size &&
+      player.x + player.size > bonus.x &&
+      player.y < bonus.y + bonus.size &&
+      player.y + player.size > bonus.y) {
+    document.getElementById("finalScreen").style.display = "block";
+  }
+}
+
+function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawRect(player);
+  drawRect(bonus);
+  update();
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>
